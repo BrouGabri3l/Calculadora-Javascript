@@ -6,15 +6,15 @@ const eq = document.querySelector('[equal]')
 const display = document.querySelector('[display]')
 const invert = document.querySelector('[invert]')
 const decimal = document.querySelector('[decimals]')
+const prcnt = document.querySelector('[percent]')
 let curr = ''
 let oper = ''
 let prev = ''
 let nf = Intl.NumberFormat("pt-br")
 function addNum(number) {
-    if (curr.length < 10) {
-        curr += number
-        show()
-    }
+    curr += number
+    show()
+
 }
 function clear() {
     curr = ''
@@ -36,14 +36,22 @@ function delet() {
     show()
 }
 function addDec(num) {
-    if (num.toString().indexOf('.') == -1 && num.length < 9) {
+    if (num.toString().indexOf('.') == -1) {
         return num + '.'
     } else {
         return num
     }
 }
+function format(num) {
+    console.log(num)
+    formnum = num.split('.')
+    numb = formnum[0]
+    dec = formnum[1]
+    console.log(dec)
+    return numb.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.') + (dec != undefined ? dec.length == 0 ? ',' : ',' + dec : '')
+}
 function show() {
-    display.innerHTML = `${prev} ${oper == "*" ? oper.replace(oper, '&#215') : oper == "/" ? oper.replace(oper, '&#247') : oper} ${curr}`
+    display.innerHTML = `${prev != '' ? format(prev) : prev} ${oper == "*" ? oper.replace(oper, '&#215') : oper == "/" ? oper.replace(oper, '&#247') : oper} ${curr != '' ? format(curr) : curr}`
 }
 function operation(op) {
     if (prev != '') {
@@ -61,7 +69,7 @@ function operation(op) {
                 res = parseFloat(prev) / parseFloat(curr)
                 break;
         }
-        return res
+        return res.toString()
     }
     // curr = curr.toString()
     // prev = ''
@@ -75,6 +83,7 @@ function inverter(number) {
         return -number
     }
 }
+
 function encode(str) {
     var encodedStr = str.replace(/[\u00A0-\u9999<>\&]/g, function (i) {
         return '&#' + i.charCodeAt(0) + ';';
@@ -154,4 +163,8 @@ cl.addEventListener('click', () => clear())
 decimal.addEventListener('click', () => {
     curr = addDec(curr)
     show()
+})
+prcnt.addEventListener('click', () => {
+    
+    percent()
 })
