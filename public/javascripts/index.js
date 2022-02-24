@@ -10,10 +10,12 @@ const prcnt = document.querySelector('[percent]')
 let curr = ''
 let oper = ''
 let prev = ''
-let nf = Intl.NumberFormat("pt-br")
+
 function addNum(number) {
-    curr += number
-    show()
+    if (curr.split('').indexOf('%') == -1) {
+        curr += number
+        show()
+    }
 
 }
 function clear() {
@@ -44,9 +46,9 @@ function addDec(num) {
 }
 function format(num) {
     console.log(num)
-    formnum = num.split('.')
-    numb = formnum[0]
-    dec = formnum[1]
+    let formnum = num.split('.')
+    let numb = formnum[0]
+    let dec = formnum[1]
     console.log(dec)
     return numb.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.') + (dec != undefined ? dec.length == 0 ? ',' : ',' + dec : '')
 }
@@ -71,9 +73,7 @@ function operation(op) {
         }
         return res.toString()
     }
-    // curr = curr.toString()
-    // prev = ''
-    // show()
+
 }
 
 function inverter(number) {
@@ -139,8 +139,6 @@ operators.forEach(operator => {
                 default:
                     oper = operator.innerHTML
                     break
-
-
             }
             show()
         }
@@ -149,13 +147,14 @@ operators.forEach(operator => {
     })
 })
 invert.addEventListener('click', () => {
-    curr = inverter(curr)
+    curr = inverter(curr).toString()
     show()
 })
 eq.addEventListener('click', () => {
-    prev = operation(oper)
-    curr = ''
+
+    curr = operation(oper)
     oper = ''
+    prev = ''
     show()
 })
 del.addEventListener('click', () => delet())
@@ -163,8 +162,4 @@ cl.addEventListener('click', () => clear())
 decimal.addEventListener('click', () => {
     curr = addDec(curr)
     show()
-})
-prcnt.addEventListener('click', () => {
-    
-    percent()
 })
